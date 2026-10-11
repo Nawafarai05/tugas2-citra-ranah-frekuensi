@@ -1,17 +1,17 @@
-function ImageOut = bandreject_filter(Image, type, d0, w, n)
+function ImageOut = bandreject_filter(Image, type, d0, w, orde)
     % Mengurangi derau/noise dengan bandreject filter
     % Input:
     %   Image   : matriks citra masukan
     %   type    : ideal, gaussian, butterworth
     %   d0      : jari-jari pita pusat yang diblokir
     %   w       : lebar pita
-    %   n       : orde filter (untuk butterworth, deafult n = 1)
+    %   orde       : orde filter (untuk butterworth, deafult n = 1)
 
     ImageDouble = double(Image);
     [m, n, c] = size(ImageDouble);
 
-    if nargin < 5 || isempty(n)
-        n = 1
+    if nargin < 5 || isempty(orde)
+        orde = 1
     end
 
     u = -floor(m/2):ceil(m/2)-1;
@@ -25,7 +25,7 @@ function ImageOut = bandreject_filter(Image, type, d0, w, n)
         case 'gaussian'
             H = 1 - exp(-((d.^2 - d0^2) ./ (d .* w + eps)).^2 / 2);
         case 'butterworth'
-            H = 1 ./ (1 + ((d .* w) ./ (d.^2 - d0^2 + eps)).^(2*n));
+            H = 1 ./ (1 + ((d .* w) ./ (d.^2 - d0^2 + eps)).^(2*orde));
         otherwise
             error('Jenis filter tidak valid.');
     end
@@ -37,7 +37,7 @@ function ImageOut = bandreject_filter(Image, type, d0, w, n)
         ImageOut(:,:,chIdx) = real(ifft2(ifftshift(G)));
     end
 
-    ImageOut = uint8(ImagOut);
+    ImageOut = uint8(ImageOut);
 
 end
 

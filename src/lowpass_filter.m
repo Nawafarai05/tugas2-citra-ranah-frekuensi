@@ -1,19 +1,19 @@
-function ImageOut = lowpass_filter(Image, type, d0, n)
+function ImageOut = lowpass_filter(Image, type, d0, orde)
     % Melakukan image smoothing dalam ranah frekuensi menggunakan lowpass
     % filter (dengan berbagai tipe)
     % Input : 
     %   Image   : matriks citra 2D (grayscale) atau 3D (berwarna)
     %   type    : ideal, gaussian, atau butterworth
     %   d0      : frekuensi cut-off (radius pita)
-    %   n       : orde filter (untuk butterworth, deafult = 1)
+    %   orde       : orde filter (untuk butterworth, deafult = 1)
     % Output :
     %    ImageOut: matriks citra haisl smoothing (uint8)
     
     ImageDouble = double(Image);
     [m, n, c] = size(ImageDouble);
     
-    if nargin < 4 || isempty(n)
-        n = 1;
+    if nargin < 4 || isempty(orde)
+        orde = 1;
     end
     
     % grid freq u dna v
@@ -29,7 +29,7 @@ function ImageOut = lowpass_filter(Image, type, d0, n)
         case 'gaussian'
             H = exp(-(d.^2) / (2 * d0^2));
         case 'butterworth'
-            H = 1 ./ (1 + (d ./ d0).^(2 * n));
+            H = 1 ./ (1 + (d ./ d0).^(2 * orde));
         otherwise
             error('Tipe filter tidak valid.');
     end

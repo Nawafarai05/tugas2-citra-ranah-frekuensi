@@ -1,4 +1,4 @@
-function ImageOut = brightness_adjustment(Image,acale_factor)
+function ImageOut = brightness_adjustment(Image, scale_factor)
     % Meningkatkan kecerahan dengan memanipulasi komponen DC dalam ranah
     % frekuensi
     % Input :
@@ -8,11 +8,7 @@ function ImageOut = brightness_adjustment(Image,acale_factor)
     %   ImageOut: matriks citra hasil (uint8)
 
     ImageDouble = double(Image);
-    [m,n, c] = size(ImageDouble);
-
-    % menentukan titik tengah spektrum (lokasi komponen DC)
-    centre_u = floor(m/2) + 1;
-    centre_v = floor(n/2) + 1;
+    [m, n, c] = size(ImageDouble);
 
     ImageOut = zeros(m, n, c);
     for chIdx = 1:c
@@ -20,7 +16,7 @@ function ImageOut = brightness_adjustment(Image,acale_factor)
         F = fftshift(fft2(ImageDouble(:,:,chIdx)));
 
         % manipulasi komponen spekctrum tengah (pada frek 0)
-        F(centre_u, centre_v) = F(centre_u, centre_v) * scale_factor;
+        F = F * scale_factor;
 
         % inverse transformasi fourier
         ImageOut(:,:,chIdx) = real(ifft2(ifftshift(F)));
